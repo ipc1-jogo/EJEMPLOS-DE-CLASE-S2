@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 
 estudiantes = []
 
-@app.route('/')
+@app.route('/getHome')
 def home():
     diccionario = {
         "mensaje": "Hola mundo!",
@@ -29,6 +32,39 @@ def crear_estudiante():
 @app.route('/students', methods=['GET'])
 def obtener_estudiantes():        
     return jsonify(estudiantes)
+
+@app.route('/student/<user>')
+def getStudent(user):           
+    for estudiante in estudiantes:
+        if estudiante["username"] == user:
+            return estudiante
+            
+    return {
+                "mensaje": "Estudiante no encontrado.",
+                "status": 403
+    }
+
+@app.route('/student/login', methods=['POST'])
+def login():        
+    datos = request.get_json()
+    print(datos)
+    
+    for estudiante in estudiantes:
+        if estudiante["username"] == datos["username"] and estudiante["password"] == datos["password"]:
+            return {
+                "mensaje": "Estudiante encontrado",
+                "estudiantes": estudiante["estudiantes"],
+                "autorizado": True,
+                "status": 200
+            }
+            
+    return {
+                "mensaje": "Credenciales incorrectas, intente de nuevo.",
+                "autorizado": False,
+                "status": 403
+    }
+
+  
 
 @app.route('/students', methods=['POST'])
 def cargar_estudiantes():
@@ -82,15 +118,17 @@ def eliminar_estudiante(id):
 @app.route('/students/find', methods=['GET'])
 def buscar_estudiante():
     nombre = request.args.get("nombre") 
-    nota = float(request.args.get("nota"))        
+    nota = float(request.args.get("nota"))  
+    data_estudiantes = {
+        "fecha": "15/10/2022",
+        "estudiantes": []
+    }      
     
     for estudiante in estudiantes:
         if estudiante.get("nombre") == nombre and estudiante.get("nota") == nota:
-            return jsonify(estudiante) 
-    return jsonify({
-        "mensaje": "No se encontro el estudiante",
-        "status": 404
-    }) 
+            data_estudiantes["estudiantes"].append(estudiante)
+    print(data_estudiantes)
+    return jsonify(data_estudiantes) 
     
 
 if __name__ == '__main__':

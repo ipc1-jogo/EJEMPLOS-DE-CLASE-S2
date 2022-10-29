@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 //Mis componenetes
 import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
-import {MatButtonModule} from '@angular/material/button';
+import { EstudiantesComponent } from './components/estudiantes/estudiantes.component';
 
 const routes: Routes = [
   {
@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'students',
+    component: EstudiantesComponent
   }
 ];
 

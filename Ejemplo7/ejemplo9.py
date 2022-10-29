@@ -53,7 +53,6 @@ def login():
         if estudiante["username"] == datos["username"] and estudiante["password"] == datos["password"]:
             return {
                 "mensaje": "Estudiante encontrado",
-                "estudiantes": estudiante["estudiantes"],
                 "autorizado": True,
                 "status": 200
             }
